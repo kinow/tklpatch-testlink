@@ -1,0 +1,27 @@
+#!/bin/bash -ex
+install()
+{
+    apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get -y \
+        -o DPkg::Options::=--force-confdef \
+        -o DPkg::Options::=--force-confold \
+        install $@
+}
+
+# start mysql
+service mysql start
+
+echo "Creating TestLink database"
+
+# create TestLink initial blank database
+mysqladmin -u root create testlink_193
+
+echo "Importing TestLink tables"
+
+cd /var/www
+mysql -u root testlink_193<testlink-db-setup.sql
+
+echo "TestLink installed successfully"
+
+# stop service so patch finishes cleanly
+service mysql stop
