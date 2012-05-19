@@ -8,7 +8,10 @@ install()
         install $@
 }
 
+cd /var/www
+
 # start mysql
+/etc/init.d/networking restart
 service mysql start
 
 echo "Creating TestLink database"
@@ -18,7 +21,6 @@ mysqladmin -u root create testlink_193
 
 echo "Importing TestLink tables"
 
-cd /var/www
 mysql -u root testlink_193<testlink-db-setup.sql
 
 echo "TestLink installed successfully"
